@@ -61,9 +61,13 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
 
-                @if($film->poster)
-<img src="{{ $film->poster }}" alt="{{ $film->title }}" class="img-fluid">
-                @endif
+                 @php
+        // Se il poster inizia con "http" lo usiamo così com'è
+        $posterUrl = Str::startsWith($film->poster, ['http', 'https'])
+            ? $film->poster
+            : asset('storage/' . ltrim($film->poster, '/'));
+    @endphp
+     <img src="{{ $posterUrl }}" alt="{{ $film->title }}" class="img-fluid w-25">
             </div>
 
             <div class="d-flex justify-content-between">
