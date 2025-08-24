@@ -7,7 +7,7 @@
     <div class="card shadow-sm p-4 mb-3">
         <!-- Locandina -->
         @if($film->poster)
-<img src="{{ $film->poster }}" alt="{{ $film->title }}" class="img-fluid">
+<img src="{{ $film->poster }}" alt="{{ $film->title }}" class="img-fluid w-25">
         @endif
 
         <!-- Titolo -->
@@ -27,7 +27,7 @@
     <!-- Bottoni -->
     <div class="d-flex justify-content-between flex-wrap">
         <a href="{{ route('dashboard') }}" class="btn btn-secondary mb-2">Torna alla Dashboard</a>
-        <div>
+        <div class="d-flex align-items-center">
             <a href="{{ route('films.edit', $film) }}" class="btn btn-warning mb-2 me-1">Modifica</a>
             <form action="{{ route('films.destroy', $film) }}" method="POST" class="d-inline mb-2" onsubmit="return confirm('Sei sicuro di voler eliminare questo film?');">
                 @csrf

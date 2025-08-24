@@ -10,11 +10,14 @@ use App\Models\Genre;
 class FilmController extends Controller
 {
     // Lista dei film
+    // Lista dei film
     public function index()
     {
         $films = Film::with('genre')->paginate(10);
-        return view('admin.films.index', compact('films'));
+        return view('admin.dashboard', compact('films'));
     }
+
+
 
     // Form per creare un film
     public function create()
@@ -24,18 +27,26 @@ class FilmController extends Controller
     }
 
     // Salva un nuovo film
+    // Salva un nuovo film
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'release_date' => 'nullable|date',
             'genre_id' => 'required|exists:genres,id',
+            'poster' => 'nullable|image|max:2048',
         ]);
 
-        Film::create($request->all());
+        if ($request->hasFile('poster')) {
+            $data['poster'] = $request->file('poster')->store('posters', 'public');
+        }
+
+        Film::create($data);
+
         return redirect()->route('films.index')->with('success', 'Film creato con successo.');
     }
+
 
     // Mostra i dettagli di un film
     public function show(Film $film)

@@ -28,22 +28,43 @@
                 @foreach($films as $film)
                 <tr>
                     <td>
-                        @if($film->poster)
-<img src="{{ $film->poster }}" alt="{{ $film->title }}" class="img-fluid">
-                        @endif
+                      @if($film->poster)
+    @php
+        // Se il poster inizia con "http" lo usiamo così com'è
+        $posterUrl = Str::startsWith($film->poster, ['http', 'https'])
+            ? $film->poster
+            : asset('storage/' . ltrim($film->poster, '/'));
+    @endphp
+
+    <img src="{{ $posterUrl }}" alt="{{ $film->title }}" class="img-fluid" style="max-height:100px;">
+@endif
+
+
                     </td>
                     <td>{{ $film->title }}</td>
                     <td>{{ $film->genre->name ?? '-' }}</td>
                     <td>{{ $film->release_date ?? '-' }}</td>
-                    <td class="text-center">
-                        <a href="{{ route('films.show', $film) }}" class="btn btn-info btn-sm me-1 mb-1">Dettagli</a>
-                        <a href="{{ route('films.edit', $film) }}" class="btn btn-warning btn-sm me-1 mb-1">Modifica</a>
-                        <form action="{{ route('films.destroy', $film) }}" method="POST" class="d-inline mb-1" onsubmit="return confirm('Sei sicuro di voler eliminare questo film?');">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger btn-sm">Elimina</button>
-                        </form>
-                    </td>
+                    <td class="align-middle">
+    <div class="d-flex flex-column flex-md-row justify-content-center gap-2">
+        <a href="{{ route('films.show', $film) }}" 
+           class="btn btn-info btn-sm flex-fill text-center">
+           Dettagli
+        </a>
+        <a href="{{ route('films.edit', $film) }}" 
+           class="btn btn-warning btn-sm flex-fill text-center">
+           Modifica
+        </a>
+        <form action="{{ route('films.destroy', $film) }}" method="POST" class="flex-fill" onsubmit="return confirm('Sei sicuro di voler eliminare questo film?');">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger btn-sm w-100">
+                Elimina
+            </button>
+        </form>
+    </div>
+</td>
+
+
                 </tr>
                 @endforeach
             </tbody>
